@@ -38,7 +38,7 @@ extension Model {
     public enum GPT4: String, ModelID {
         case gpt4 = "gpt-4"
         case gpt4_32k = "gpt-4-32k"
-        case gpt4_128k_preview = "gpt-4-1106-preview"
+        case gpt4_turbo_preview = "gpt-4-turbo-preview"
     }
 
     public enum GPT3: String, ModelID {
@@ -51,6 +51,8 @@ extension Model {
         case textBabbage001 = "text-babbage-001"
         case textAda001 = "text-ada-001"
         case textEmbeddingAda002 = "text-embedding-ada-002"
+        case textEmbedding3Small = "text-embedding-3-small"
+        case textEmbedding3Large = "text-embedding-3-large"
         case textDavinci001 = "text-davinci-001"
         case textDavinciEdit001 = "text-davinci-edit-001"
         case davinciInstructBeta = "davinci-instruct-beta"
