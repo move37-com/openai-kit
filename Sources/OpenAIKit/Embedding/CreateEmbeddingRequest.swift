@@ -9,12 +9,14 @@ struct CreateEmbeddingRequest: Request {
     
     init(
         model: String,
+        dimensions: Int,
         input: [String],
         user: String?
     ) throws {
         
         let body = Body(
             model: model,
+            dimensions: dimensions,
             input: input,
             user: user
         )
@@ -26,6 +28,7 @@ struct CreateEmbeddingRequest: Request {
 extension CreateEmbeddingRequest {
     struct Body: Encodable {
         let model: String
+        let dimensions: Int
         let input: [String]
         let user: String?
     }
