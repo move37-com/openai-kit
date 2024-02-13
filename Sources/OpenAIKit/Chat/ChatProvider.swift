@@ -17,6 +17,7 @@ public struct ChatProvider {
     public func create(
         model: ModelID,
         messages: [Chat.Message] = [],
+        responseFormat: ResponseFormat = .text,
         temperature: Double = 1.0,
         topP: Double = 1.0,
         n: Int = 1,
@@ -31,6 +32,7 @@ public struct ChatProvider {
         let request = try CreateChatRequest(
             model: model.id,
             messages: messages,
+            responseFormat: responseFormat,
             temperature: temperature,
             topP: topP,
             n: n,
@@ -63,6 +65,7 @@ public struct ChatProvider {
     public func stream(
         model: ModelID,
         messages: [Chat.Message] = [],
+        responseFormat: ResponseFormat = .text,
         temperature: Double = 1.0,
         topP: Double = 1.0,
         n: Int = 1,
@@ -77,6 +80,7 @@ public struct ChatProvider {
         let request = try CreateChatRequest(
             model: model.id,
             messages: messages,
+            responseFormat: responseFormat,
             temperature: temperature,
             topP: topP,
             n: n,

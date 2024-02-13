@@ -10,6 +10,7 @@ struct CreateChatRequest: Request {
     init(
         model: String,
         messages: [Chat.Message],
+        responseFormat: ResponseFormat = .text,
         temperature: Double,
         topP: Double,
         n: Int,
@@ -25,6 +26,7 @@ struct CreateChatRequest: Request {
         let body = Body(
             model: model,
             messages: messages,
+            responseFormat: responseFormat,
             temperature: temperature,
             topP: topP,
             n: n,
@@ -45,6 +47,7 @@ extension CreateChatRequest {
     struct Body: Encodable {
         let model: String
         let messages: [Chat.Message]
+        let responseFormat: ResponseFormat
         let temperature: Double
         let topP: Double
         let n: Int
@@ -59,6 +62,7 @@ extension CreateChatRequest {
         enum CodingKeys: CodingKey {
             case model
             case messages
+            case responseFormat
             case temperature
             case topP
             case n
@@ -79,6 +83,7 @@ extension CreateChatRequest {
                 try container.encode(messages, forKey: .messages)
             }
 
+            try container.encode(responseFormat, forKey: .responseFormat)
             try container.encode(temperature, forKey: .temperature)
             try container.encode(topP, forKey: .topP)
             try container.encode(n, forKey: .n)
