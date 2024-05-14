@@ -8,7 +8,7 @@ public struct API {
     public init(
         scheme: API.Scheme,
         host: String,
-        pathPrefix path: String? = nil
+        path: String? = nil
     ) {
         self.scheme = scheme
         self.host = host

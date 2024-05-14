@@ -15,7 +15,7 @@ public struct ChatProvider {
      Creates a chat completion for the provided prompt and parameters
      */
     public func create(
-        api: Chat.API = .openAI,
+        path: String? = nil,
         model: ModelID,
         messages: [Chat.Message] = [],
         responseFormat: ResponseFormat = .text,
@@ -31,7 +31,7 @@ public struct ChatProvider {
     ) async throws -> Chat {
         
         let request = try CreateChatRequest(
-            api: api,
+            path: path,
             model: model.id,
             messages: messages,
             responseFormat: responseFormat,
@@ -65,7 +65,7 @@ public struct ChatProvider {
      https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#event_stream_format
      */
     public func stream(
-        api: Chat.API = .openAI,
+        path: String? = nil,
         model: ModelID,
         messages: [Chat.Message] = [],
         responseFormat: ResponseFormat = .text,
@@ -81,7 +81,7 @@ public struct ChatProvider {
     ) async throws -> AsyncThrowingStream<ChatStream, Error> {
         
         let request = try CreateChatRequest(
-            api: api,
+            path: path,
             model: model.id,
             messages: messages,
             responseFormat: responseFormat,

@@ -32,13 +32,6 @@ extension Chat {
     }
 }
 
-extension Chat {
-    public enum API {
-        case openAI
-        case anthropic
-    }
-}
-
 extension Chat.Message: Codable {
     private enum CodingKeys: String, CodingKey {
         case role
