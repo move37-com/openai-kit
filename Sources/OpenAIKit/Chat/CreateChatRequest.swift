@@ -17,7 +17,7 @@ struct CreateChatRequest: Request {
     }
     
     init(
-        api: Chat.API = .openAI,
+        api: Chat.API,
         model: String,
         messages: [Chat.Message],
         responseFormat: ResponseFormat = .text,
