@@ -35,6 +35,17 @@ public protocol ModelID {
 }
 
 extension Model {
+    
+    public enum Custom: ModelID {
+        case custom(String)
+        public var id: String {
+            switch self {
+            case .custom(let id):
+                return id
+            }
+        }
+    }
+    
     public enum GPT4: String, ModelID {
         case gpt4 = "gpt-4"
         case gpt4_32k = "gpt-4-32k"
