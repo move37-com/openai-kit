@@ -7,7 +7,11 @@ public struct Configuration {
     
     var headers: HTTPHeaders {
         var headers = HTTPHeaders()
-        headers.add(name: "Authorization", value: "Bearer \(apiKey)")
+        if let header = api?.authHeader {
+            headers.add(name: header, value: apiKey)
+        } else {
+            headers.add(name: "Authorization", value: "Bearer \(apiKey)")
+        }
 
         if let organization = organization {
             headers.add(name: "OpenAI-Organization", value: organization)
