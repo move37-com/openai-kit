@@ -4,10 +4,20 @@ import Foundation
 
 struct CreateChatRequest: Request {
     let method: HTTPMethod = .POST
-    let path = "/v1/chat/completions"
+    let api: Chat.API
     let body: Data?
     
+    var path: String {
+        switch api {
+        case .openAI:
+            "/v1/chat/completions"
+        case .anthropic:
+            "/v1/messages"
+        }
+    }
+    
     init(
+        api: Chat.API = .openAI,
         model: String,
         messages: [Chat.Message],
         responseFormat: ResponseFormat = .text,
@@ -40,6 +50,7 @@ struct CreateChatRequest: Request {
         )
                 
         self.body = try Self.encoder.encode(body)
+        self.api = api
     }
 }
 
