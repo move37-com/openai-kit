@@ -65,7 +65,7 @@ public struct ChatProvider {
      https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#event_stream_format
      */
     public func stream(
-        api: Chat.API,
+        api: Chat.API = .openAI,
         model: ModelID,
         messages: [Chat.Message] = [],
         responseFormat: ResponseFormat = .text,
