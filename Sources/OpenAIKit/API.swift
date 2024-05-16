@@ -4,18 +4,18 @@ public struct API {
     public let scheme: Scheme
     public let host: String
     public let path: String?
-    public let authHeader: String?
+    public let requestHeaders: [String : String]?
     
     public init(
         scheme: API.Scheme,
         host: String,
         path: String? = nil,
-        authHeader: String? = nil
+        requestHeaders: [String : String]?
     ) {
         self.scheme = scheme
         self.host = host
         self.path = path
-        self.authHeader = authHeader
+        self.requestHeaders = requestHeaders
     }
 }
 
