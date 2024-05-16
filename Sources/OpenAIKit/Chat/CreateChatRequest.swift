@@ -27,10 +27,10 @@ struct CreateChatRequest: Request {
         user: String?,
         anthropic: Bool
     ) throws {
-        // For Anthropic compatibility: top-level system prompt instead of "system" message
-        var messages = messages
-        var system: String?
         if anthropic {
+            // For Anthropic compatibility: top-level system prompt instead of "system" message
+            var messages = messages
+            var system: String?
             let sysMessages = messages.filter { m in
                 if case .system(_) = m { return true }
                 return false
@@ -40,26 +40,37 @@ struct CreateChatRequest: Request {
                 if case .system(_) = m { return false }
                 return true
             }
-        }
         
-        let body = Body(
-            model: model,
-            messages: messages,
-            responseFormat: responseFormat,
-            temperature: temperature,
-            topP: topP,
-            n: n,
-            stream: stream,
-            stops: stops,
-            maxTokens: maxTokens,
-            presencePenalty: presencePenalty,
-            frequencyPenalty: frequencyPenalty,
-            logitBias: logitBias,
-            user: user,
-            system: system
-        )
-                
-        self.body = try Self.encoder.encode(body)
+            let body = BodyAnthropic(
+                model: model,
+                messages: messages,
+                temperature: temperature,
+                topP: topP,
+                stream: stream,
+                stopSequences: stops,
+                maxTokens: maxTokens,
+                system: system
+            )
+            self.body = try Self.encoder.encode(body)
+            
+        } else {
+            let body = Body(
+                model: model,
+                messages: messages,
+                responseFormat: responseFormat,
+                temperature: temperature,
+                topP: topP,
+                n: n,
+                stream: stream,
+                stops: stops,
+                maxTokens: maxTokens,
+                presencePenalty: presencePenalty,
+                frequencyPenalty: frequencyPenalty,
+                logitBias: logitBias,
+                user: user
+            )
+            self.body = try Self.encoder.encode(body)
+        }
         self.pathOverride = path
     }
 }
@@ -79,7 +90,6 @@ extension CreateChatRequest {
         let frequencyPenalty: Double
         let logitBias: [String: Int]
         let user: String?
-        let system: String? // For Anthropic compatibility: top-level system prompt instead of message
             
         enum CodingKeys: CodingKey {
             case model
@@ -95,7 +105,6 @@ extension CreateChatRequest {
             case frequencyPenalty
             case logitBias
             case user
-            case system
         }
         
         func encode(to encoder: Encoder) throws {
@@ -128,6 +137,50 @@ extension CreateChatRequest {
             }
             
             try container.encodeIfPresent(user, forKey: .user)
+        }
+    }
+    
+    /// Anthropic API-compatible body.
+    struct BodyAnthropic: Encodable {
+        let model: String
+        let messages: [Chat.Message]
+        let temperature: Double
+        let topP: Double
+        let stream: Bool
+        let stopSequences: [String]
+        let maxTokens: Int?
+        let system: String? // For Anthropic compatibility: top-level system prompt instead of message
+            
+        enum CodingKeys: CodingKey {
+            case model
+            case messages
+            case temperature
+            case topP
+            case stream
+            case stopSequences
+            case maxTokens
+            case system
+        }
+        
+        func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(model, forKey: .model)
+            
+            if !messages.isEmpty {
+                try container.encode(messages, forKey: .messages)
+            }
+
+            try container.encode(temperature, forKey: .temperature)
+            try container.encode(topP, forKey: .topP)
+            try container.encode(stream, forKey: .stream)
+            
+            if !stopSequences.isEmpty {
+                try container.encode(stopSequences, forKey: .stopSequences)
+            }
+            
+            if let maxTokens {
+                try container.encode(maxTokens, forKey: .maxTokens)
+            }
             
             if let system {
                 try container.encode(system, forKey: .system)
