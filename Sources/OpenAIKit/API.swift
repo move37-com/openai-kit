@@ -10,7 +10,7 @@ public struct API {
         scheme: API.Scheme,
         host: String,
         path: String? = nil,
-        requestHeaders: [String : String]?
+        requestHeaders: [String : String]? = nil
     ) {
         self.scheme = scheme
         self.host = host
