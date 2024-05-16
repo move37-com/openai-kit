@@ -4,18 +4,18 @@ public struct API {
     public let scheme: Scheme
     public let host: String
     public let path: String?
-    public let requestHeaders: [String : String]?
+    public let anthropic: Bool
     
     public init(
         scheme: API.Scheme,
         host: String,
         path: String? = nil,
-        requestHeaders: [String : String]? = nil
+        anthropicCompatible: Bool = false
     ) {
         self.scheme = scheme
         self.host = host
         self.path = path
-        self.requestHeaders = requestHeaders
+        self.anthropic = anthropicCompatible
     }
 }
 

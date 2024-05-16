@@ -44,7 +44,8 @@ public struct ChatProvider {
             presencePenalty: presencePenalty,
             frequencyPenalty: frequencyPenalty,
             logitBias: logitBias,
-            user: user
+            user: user,
+            anthropic: requestHandler.configuration.api?.anthropic ?? false
         )
     
         return try await requestHandler.perform(request: request)
@@ -94,7 +95,8 @@ public struct ChatProvider {
             presencePenalty: presencePenalty,
             frequencyPenalty: frequencyPenalty,
             logitBias: logitBias,
-            user: user
+            user: user,
+            anthropic: requestHandler.configuration.api?.anthropic ?? false
         )
     
         return try await requestHandler.stream(request: request)

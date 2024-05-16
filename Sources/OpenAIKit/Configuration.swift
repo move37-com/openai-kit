@@ -7,12 +7,13 @@ public struct Configuration {
     
     var headers: HTTPHeaders {
         var headers = HTTPHeaders()
-        if let customHeaders = api?.requestHeaders {
-            customHeaders.forEach {
-                headers.add(name: $0, value: $1)
-            }
+        if api?.anthropic == true {
+            // Anthropic API requires different headers
+            headers.add(name: "x-api-key", value: apiKey)
+            headers.add(name: "anthropic-version", value: "2023-06-01")
+        } else {
+            headers.add(name: "Authorization", value: "Bearer \(apiKey)")
         }
-        headers.add(name: "Authorization", value: "Bearer \(apiKey)")
 
         if let organization = organization {
             headers.add(name: "OpenAI-Organization", value: organization)

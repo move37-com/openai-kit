@@ -24,8 +24,23 @@ struct CreateChatRequest: Request {
         presencePenalty: Double,
         frequencyPenalty: Double,
         logitBias: [String: Int],
-        user: String?
+        user: String?,
+        anthropic: Bool
     ) throws {
+        // For Anthropic compatibility: top-level system prompt instead of "system" message
+        var messages = messages
+        var system: String?
+        if anthropic {
+            let sysMessages = messages.filter { m in
+                if case .system(_) = m { return true }
+                return false
+            }
+            system = sysMessages.map(\.content).joined(separator: "\n")
+            messages = messages.filter { m in
+                if case .system(_) = m { return false }
+                return true
+            }
+        }
         
         let body = Body(
             model: model,
@@ -40,7 +55,8 @@ struct CreateChatRequest: Request {
             presencePenalty: presencePenalty,
             frequencyPenalty: frequencyPenalty,
             logitBias: logitBias,
-            user: user
+            user: user,
+            system: system
         )
                 
         self.body = try Self.encoder.encode(body)
@@ -63,6 +79,7 @@ extension CreateChatRequest {
         let frequencyPenalty: Double
         let logitBias: [String: Int]
         let user: String?
+        let system: String? // For Anthropic compatibility: top-level system prompt instead of message
             
         enum CodingKeys: CodingKey {
             case model
@@ -78,6 +95,7 @@ extension CreateChatRequest {
             case frequencyPenalty
             case logitBias
             case user
+            case system
         }
         
         func encode(to encoder: Encoder) throws {
@@ -110,6 +128,10 @@ extension CreateChatRequest {
             }
             
             try container.encodeIfPresent(user, forKey: .user)
+            
+            if let system {
+                try container.encode(system, forKey: .system)
+            }
         }
     }
 }
