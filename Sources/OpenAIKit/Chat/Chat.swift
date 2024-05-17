@@ -5,10 +5,17 @@ import Foundation
  */
 public struct Chat {
     public let id: String
-    public let object: String?
+    public let object: String
     public let created: Date
     public let model: String
     public let choices: [Choice]
+    public let usage: Usage
+}
+
+public struct ChatAnthropic: Codable {
+    public let id: String
+    public let model: String
+    public let content: [Content]
     public let usage: Usage
 }
 
@@ -19,6 +26,17 @@ extension Chat {
         public let index: Int
         public let message: Message
         public let finishReason: FinishReason?
+    }
+}
+
+extension ChatAnthropic {
+    public struct Content: Codable {
+        let type: String
+        let text: String
+    }
+    public struct Usage: Codable {
+        public let inputTokens: Int
+        public let outputTokens: Int
     }
 }
 

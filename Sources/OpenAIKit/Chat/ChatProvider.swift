@@ -45,7 +45,45 @@ public struct ChatProvider {
             frequencyPenalty: frequencyPenalty,
             logitBias: logitBias,
             user: user,
-            anthropic: requestHandler.configuration.api?.anthropic ?? false
+            anthropic: false
+        )
+    
+        return try await requestHandler.perform(request: request)
+
+    }
+    
+    public func createAnthropic(
+        path: String? = nil,
+        model: ModelID,
+        messages: [Chat.Message] = [],
+        responseFormat: ResponseFormat = .text,
+        temperature: Double = 1.0,
+        topP: Double = 1.0,
+        n: Int = 1,
+        stops: [String] = [],
+        maxTokens: Int? = nil,
+        presencePenalty: Double = 0.0,
+        frequencyPenalty: Double = 0.0,
+        logitBias: [String : Int] = [:],
+        user: String? = nil
+    ) async throws -> ChatAnthropic {
+        
+        let request = try CreateChatRequest(
+            path: path,
+            model: model.id,
+            messages: messages,
+            responseFormat: responseFormat,
+            temperature: temperature,
+            topP: topP,
+            n: n,
+            stream: false,
+            stops: stops,
+            maxTokens: maxTokens,
+            presencePenalty: presencePenalty,
+            frequencyPenalty: frequencyPenalty,
+            logitBias: logitBias,
+            user: user,
+            anthropic: true
         )
     
         return try await requestHandler.perform(request: request)
