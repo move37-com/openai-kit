@@ -31,8 +31,8 @@ extension Chat {
 
 extension ChatAnthropic {
     public struct Content: Codable {
-        let type: String
-        let text: String
+        public let type: String
+        public let text: String
     }
     public struct Usage: Codable {
         public let inputTokens: Int
