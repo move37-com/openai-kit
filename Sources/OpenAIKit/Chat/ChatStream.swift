@@ -30,3 +30,10 @@ extension ChatStream.Choice {
 extension ChatStream.Choice.Message: Codable {}
 
 
+public struct ChatStreamAnthropic: Codable {
+    public let id: String
+    public let object: String
+    public let created: Date
+    public let model: String
+    public let choices: [ChatStream.Choice]
+}
