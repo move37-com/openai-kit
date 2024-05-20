@@ -31,9 +31,11 @@ extension ChatStream.Choice.Message: Codable {}
 
 
 public struct ChatStreamAnthropic: Codable {
-    public let id: String
-    public let object: String
-    public let created: Date
-    public let model: String
-    public let choices: [ChatStream.Choice]
+    public struct Delta: Codable {
+        public let type: String
+        public let text: String
+    }
+    public let type: String
+    public let index: Int
+    public let delta: Delta
 }
