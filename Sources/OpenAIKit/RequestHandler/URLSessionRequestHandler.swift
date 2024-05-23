@@ -37,19 +37,33 @@ struct URLSessionRequestHandler: RequestHandler {
         return AsyncThrowingStream<T, Error> { [urlRequest] continuation in
             Task(priority: .userInitiated) {
                 do {
-                    
+                    var messageBody = ""
+                    var didSendData = false
                     let (bytes, _) = try await session.bytes(for: urlRequest)
                     for try await buffer in bytes.lines {
+                        messageBody += buffer
+                        let line = buffer.trimmingCharacters(in: .whitespacesAndNewlines)
+                        if line.starts(with: "{\"type\":\"error\"") {
+                            if let data = line.data(using: .utf8), let err = try? JSONDecoder().decode(APIErrorResponse.self, from: data) {
+                                throw err
+                            } else {
+                                throw APIErrorResponse(error: APIError(message: line, type: "unknown", param: nil, code: nil))
+                            }
+                        }
                         buffer
                             .components(separatedBy: "data: ")
                             .filter { $0 != "data: " }
-                            .compactMap {
-                                guard let data = $0.data(using: .utf8) else { return nil }
+                            .compactMap { str -> T? in
+                                guard let data = str.data(using: .utf8) else { return nil }
                                 return try? decoder.decode(T.self, from: data)
                             }
                             .forEach { value in
                                 continuation.yield(value)
+                                didSendData = true
                             }
+                    }
+                    if !didSendData {
+                        throw RequestHandlerError.unknown("An unknown error was encountered. Full message body:\n\(messageBody)")
                     }
                     continuation.finish()
                 } catch {
