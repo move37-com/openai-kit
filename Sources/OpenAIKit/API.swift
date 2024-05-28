@@ -20,7 +20,7 @@ public struct API {
 }
 
 extension API {
-    public enum Scheme {
+    public enum Scheme: Equatable {
         case http
         case https
         case custom(String)
@@ -36,4 +36,16 @@ extension API {
             }
         }
     }
+}
+
+
+extension API: Equatable {
+    
+    public static func == (lhs: API, rhs: API) -> Bool {
+        lhs.scheme == rhs.scheme &&
+        lhs.host == rhs.host &&
+        lhs.path == rhs.path &&
+        lhs.anthropic == rhs.anthropic
+    }
+    
 }

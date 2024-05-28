@@ -33,3 +33,14 @@ public struct Configuration {
     }
     
 }
+
+
+extension Configuration: Equatable {
+    
+    public static func == (lhs: Configuration, rhs: Configuration) -> Bool {
+        lhs.apiKey == rhs.apiKey &&
+        lhs.organization == rhs.organization &&
+        lhs.api == rhs.api
+    }
+    
+}
